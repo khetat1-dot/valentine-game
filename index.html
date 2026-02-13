@@ -1,232 +1,300 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<title>Valentine Game 💖</title>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8" />
+  <title>game-uno 💖</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg1: #1a1b3a;
+      --bg2: #2b145f;
+      --card: #12132a;
+      --accent: #ff4d6d;
+      --accent-2: #ffd166;
+      --text: #f4f4ff;
+      --muted: #b8b8ff;
+      --success: #2dd4bf;
+    }
 
-<style>
-:root {
-  --bg1:#1a1b3a;
-  --bg2:#2b145f;
-  --accent:#ff4d6d;
-  --accent2:#ffd166;
-  --text:#f4f4ff;
-  --muted:#b8b8ff;
-}
+    * { box-sizing: border-box; }
 
-*{box-sizing:border-box}
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
+      color: var(--text);
+      background: radial-gradient(1200px 600px at 20% -10%, #3a1c71 0%, transparent 60%),
+                  radial-gradient(900px 500px at 110% 10%, #ff4d6d22 0%, transparent 60%),
+                  linear-gradient(135deg, var(--bg1), var(--bg2));
+      display: grid;
+      place-items: center;
+    }
 
-body{
-  margin:0;
-  min-height:100vh;
-  font-family:'Segoe UI',system-ui;
-  color:var(--text);
-  background:
-  radial-gradient(1200px 600px at 20% -10%, #3a1c71 0%, transparent 60%),
-  linear-gradient(135deg,var(--bg1),var(--bg2));
-  display:grid;
-  place-items:center;
-  overflow:hidden;
-}
+    .wrap {
+      width: min(960px, 94vw);
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
 
-/* floating hearts */
-.hearts{
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  overflow:hidden;
-}
-.hearts span{
-  position:absolute;
-  font-size:22px;
-  opacity:.15;
-  animation:float 20s linear infinite;
-}
-@keyframes float{
-  from{transform:translateY(110vh)}
-  to{transform:translateY(-10vh)}
-}
+    .top {
+      display: grid;
+      gap: 12px;
+    }
 
-.wrap{width:min(960px,94vw);display:grid;gap:16px}
+    .title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
 
-.title{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
+    .badge {
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #ffffff14;
+      color: var(--accent-2);
+      font-weight: 600;
+      letter-spacing: .3px;
+    }
 
-h1{
-  margin:0;
-  letter-spacing:.5px;
-}
+    .progress {
+      height: 10px;
+      background: #ffffff14;
+      border-radius: 999px;
+      overflow: hidden;
+    }
 
-.sparkle{
-  animation:sparkle 1.5s ease-in-out infinite alternate;
-}
-@keyframes sparkle{
-  from{text-shadow:0 0 5px #fff0}
-  to{text-shadow:0 0 20px #ffd166}
-}
+    .progress > span {
+      display: block;
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      transition: width .4s ease;
+    }
 
-.subtext{
-  margin:0;
-  font-size:14px;
-  color:var(--muted);
-  font-style:italic;
-}
+    .card {
+      background: linear-gradient(180deg, #1a1b3a, #0f1030);
+      border: 1px solid #ffffff1f;
+      border-radius: 22px;
+      padding: 28px;
+      box-shadow: 0 30px 60px rgba(0,0,0,.35);
+      display: grid;
+      gap: 20px;
+    }
 
-.badge{
-  padding:6px 10px;
-  border-radius:999px;
-  background:#ffffff14;
-  font-weight:600;
-}
+    .round {
+      color: var(--muted);
+      font-weight: 700;
+      letter-spacing: .4px;
+      text-transform: uppercase;
+      font-size: 12px;
+    }
 
-.progress{
-  height:10px;
-  background:#ffffff14;
-  border-radius:999px;
-  overflow:hidden;
-}
-.progress span{
-  display:block;
-  height:100%;
-  width:0%;
-  background:linear-gradient(90deg,var(--accent),var(--accent2));
-  transition:width .4s ease;
-}
+    .question {
+      font-size: clamp(20px, 3vw, 26px);
+      line-height: 1.3;
+    }
 
-.card{
-  background:linear-gradient(180deg,#1a1b3a,#0f1030);
-  border-radius:22px;
-  padding:28px;
-  box-shadow:0 30px 60px rgba(0,0,0,.35);
-  transition:.3s;
-  display:grid;
-  gap:20px;
-}
-.card:hover{
-  transform:translateY(-4px);
-  box-shadow:0 40px 80px rgba(255,77,109,.2);
-}
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+    }
 
-.round{
-  font-size:12px;
-  text-transform:uppercase;
-  color:var(--muted);
-  font-weight:700;
-}
+    .hint {
+      color: var(--muted);
+      font-size: 14px;
+    }
 
-.question{
-  font-size:22px;
-  min-height:70px;
-}
+    .btn {
+      appearance: none;
+      border: none;
+      border-radius: 14px;
+      padding: 12px 16px;
+      font-size: 16px;
+      font-weight: 700;
+      color: #0b0b16;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      cursor: pointer;
+      box-shadow: 0 10px 20px rgba(0,0,0,.35);
+    }
 
-.btn{
-  border:none;
-  border-radius:14px;
-  padding:12px 16px;
-  font-weight:700;
-  cursor:pointer;
-  background:linear-gradient(135deg,var(--accent),var(--accent2));
-}
+    .btn.secondary {
+      background: #ffffff1f;
+      color: var(--text);
+    }
 
-.countdown{
-  padding:10px 14px;
-  border-radius:12px;
-  background:#ffffff14;
-  font-weight:700;
-  animation:pulse 1s infinite alternate;
-}
-@keyframes pulse{
-  from{transform:scale(1)}
-  to{transform:scale(1.1)}
-}
+    .countdown {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      background: #ffffff14;
+      font-weight: 700;
+      animation: glow 1s infinite alternate;
+    }
 
-.final{
-  text-align:center;
-  display:grid;
-  gap:16px;
-}
+    @keyframes glow {
+      0% { box-shadow: 0 0 6px #ff4d6d55; }
+      100% { box-shadow: 0 0 18px #ffd16655; }
+    }
 
-.music-toggle{
-  font-size:12px;
-  cursor:pointer;
-  opacity:.7;
-}
-</style>
+    .dot {
+      width: 10px; height: 10px; border-radius: 50%; background: #ffffff55;
+    }
+
+    .dot.active { background: var(--success); }
+
+    .final {
+      text-align: center;
+      display: grid;
+      gap: 16px;
+    }
+
+    .final h2 { margin: 0; font-size: 30px; }
+    .final p { color: var(--muted); font-size: 18px; }
+
+    @media (max-width: 640px) {
+      .controls { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
-
 <body>
-
-<div class="hearts" id="hearts"></div>
-
-<div class="wrap">
-  <div>
-    <div class="title">
-      <div>
-        <h1 class="sparkle">💖 Valentine Game Night</h1>
-        <p class="subtext">Made with way too much affection ✨</p>
+  <div class="wrap">
+    <div class="top">
+      <div class="title">
+        <h1>💖 Valentine Game Night</h1>
+        <span class="badge" id="playerName">For my Cray Ray</span>
       </div>
-      <span class="badge" id="playerName">For my Cray Ray</span>
-    </div>
-    <div class="progress"><span id="progressBar"></span></div>
-  </div>
-
-  <div class="card">
-    <div class="round" id="roundTitle">Ready?</div>
-    <div class="question" id="questionText"></div>
-
-    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px">
-      <div class="countdown" id="countdown" hidden>
-        Ready… <span id="count">3</span>
-      </div>
-      <button class="btn" id="nextBtn">Answer together 💞</button>
+      <div class="progress"><span id="progressBar"></span></div>
     </div>
 
-    <div class="music-toggle" onclick="toggleMusic()">🎵 toggle soft vibes</div>
+    <div class="card" id="card">
+      <div class="round" id="roundTitle">Ready?</div>
+      <div class="question" id="questionText">Grab snacks, hop on the call, and answer honestly ✨</div>
+
+      <div class="controls">
+        <div class="hint">Both answer out loud, then start the countdown.</div>
+        <div style="display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap;">
+          <div class="countdown" id="countdown" hidden>
+            <span id="count">3</span>
+            <span class="dot" id="d1"></span>
+            <span class="dot" id="d2"></span>
+            <span class="dot" id="d3"></span>
+          </div>
+          <button class="btn secondary" id="bothBtn">Both answer → Next</button>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
 
-<audio id="bgMusic" loop>
-  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_58b5b41c2d.mp3" type="audio/mpeg">
-</audio>
+  <script>
+    const HER_NAME = 'my Cray Ray';
 
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    const rounds = [
+      {
+        name: 'Round 1 · Sweet 🌸',
+        questions: [
+          'What’s one little thing that always makes your day better?',
+          'What’s a memory that shaped how you see relationships?',
+          'What’s one thing you value about me?',
+          'What’s something you’re proud of, even if you don’t talk about it much?',
+          'What’s one thing that always improves your mood?',
+          'What does “talking” to someone mean to you?'
+        ]
+      },
+      {
+        name: 'Round 2 · Flirty 😏',
+        questions: [
+          'What’s something small about me that grew on you over time?',
+          'What’s a moment between us that stood out to you?',
+          'What’s something you find attractive (physical and personality-wise) about me?',
+          'What’s something about me that surprised you in a good way?',
+          'What is your idea of a perfect romantic night?',
+          'Whats one trait of mine you hope never changes?',
+          'If someone asked you why you are dating me, what would you tell them?',   
+          'What’s something you notice about me that others might miss?'
+        ]
+      },
+      {
+        name: 'Round 3 · Spicy 🔥',
+        questions: [
+          'What makes a moment feel intimate to you?',
+          'What’s something about me that affects you more than you expected?',
+          'What’s something you want to experience together?',
+          'Have you ever felt a physical pull toward me?',
+          'Have you ever caught yourself wanting more than just conversation with me?',
+          'Do I ever make you feel nervous?',
+          'If we could spend the night together, what would we do',
+        ]
+      }
+    ];
 
-<script>
-const HER_NAME="my Cray Ray";
+    let r = 0;
+    let q = 0;
+    let total = rounds.reduce((s, x) => s + x.questions.length, 0);
+    let seen = 0;
+    let ticking = false;
 
-const rounds=[
-{name:"Round 1 · Sweet 🌸",questions:[
-"What’s one little thing that always makes your day better?",
-"What’s one thing you value about me?",
-"What’s something you’re proud of?"
-]},
-{name:"Round 2 · Flirty 😏",questions:[
-"What’s something small about me that grew on you?",
-"What’s your idea of a perfect romantic night?"
-]},
-{name:"Round 3 · Spicy 🔥",questions:[
-"Have you ever felt a physical pull toward me?",
-"If we spent the night together what would we do?"
-]}
-];
+    const roundTitle = document.getElementById('roundTitle');
+    const questionText = document.getElementById('questionText');
+    const progressBar = document.getElementById('progressBar');
+    const bothBtn = document.getElementById('bothBtn');
+    const countdown = document.getElementById('countdown');
+    const countEl = document.getElementById('count');
+    const dots = [document.getElementById('d1'), document.getElementById('d2'), document.getElementById('d3')];
+    const nameBadge = document.getElementById('playerName');
+    const card = document.getElementById('card');
 
-let r=0,q=0,seen=0;
-const total=rounds.reduce((s,x)=>s+x.questions.length,0);
+    nameBadge.textContent = `For ${HER_NAME}`;
 
-const roundTitle=document.getElementById("roundTitle");
-const questionText=document.getElementById("questionText");
-const progressBar=document.getElementById("progressBar");
-const nextBtn=document.getElementById("nextBtn");
-const countdown=document.getElementById("countdown");
-const countEl=document.getElementById("count");
+    function updateProgress() {
+      const pct = Math.min(100, Math.round((seen / total) * 100));
+      progressBar.style.width = pct + '%';
+    }
 
-document.getElementById("playerName").textContent=`For ${HER_NAME}`;
+    function showQuestion() {
+      if (r >= rounds.length) return endGame();
+      const round = rounds[r];
+      roundTitle.textContent = round.name;
+      questionText.textContent = round.questions[q];
+    }
 
-/* floating hearts generate */
+    function startCountdown() {
+      if (ticking) return;
+      ticking = true;
+      countdown.hidden = false;
+      let t = 3;
+      countEl.textContent = t;
+      dots.forEach(d => d.classList.remove('active'));
+
+      const iv = setInterval(() => {
+        dots[3 - t]?.classList.add('active');
+        t--;
+        if (t >= 0) countEl.textContent = t;
+        if (t < 0) {
+          clearInterval(iv);
+          countdown.hidden = true;
+          dots.forEach(d => d.classList.remove('active'));
+          ticking = false;
+          next();
+        }
+      }, 900);
+    }
+
+    function next() {
+      seen++;
+      updateProgress();
+      q++;
+      if (q >= rounds[r].questions.length) { r++; q = 0; }
+      if (r >= rounds.length) return endGame();
+      showQuestion();
+    }
+
+    /* floating hearts generate */
 const hearts=document.getElementById("hearts");
 for(let i=0;i<20;i++){
   const h=document.createElement("span");
@@ -246,68 +314,22 @@ function typeText(text){
     if(i>=text.length)clearInterval(iv);
   },20);
 }
-
-function updateProgress(){
-  progressBar.style.width=Math.round((seen/total)*100)+"%";
-}
-
-function showQuestion(){
-  if(r>=rounds.length)return endGame();
-  roundTitle.textContent=rounds[r].name;
-  typeText(rounds[r].questions[q]);
-}
-
-function startCountdown(){
-  countdown.hidden=false;
-  let t=3;
-  countEl.textContent=t;
-  const iv=setInterval(()=>{
-    t--;
-    countEl.textContent=t;
-    if(t<0){
-      clearInterval(iv);
-      countdown.hidden=true;
-      next();
+    function endGame() {
+      roundTitle.textContent = '💘 Final Screen';
+      questionText.innerHTML = `
+        <div class="final">
+          <h2>Happy Valentine’s Day, ${HER_NAME} 💖</h2>
+          <p>Thanks for playing. I mishh you and I like you and OKAY NEXT GAME.</p>
+        </div>`;
+      bothBtn.textContent = 'Replay';
+      bothBtn.onclick = () => location.reload();
+      progressBar.style.width = '100%';
     }
-  },800);
-}
 
-function next(){
-  seen++;
-  updateProgress();
-  q++;
-  if(q>=rounds[r].questions.length){r++;q=0;}
-  if(r>=rounds.length)return endGame();
-  showQuestion();
-}
+    bothBtn.addEventListener('click', startCountdown);
 
-function endGame(){
-  roundTitle.textContent="💘 Final Level";
-  questionText.innerHTML=`
-    <div class="final">
-      <h2>Happy Valentine’s Day, ${HER_NAME} 💖</h2>
-      <p>I like you more than I admit.</p>
-      <p>Secret unlocked: you’re my favorite person.</p>
-      <button class="btn" onclick="confetti()">Celebrate 💕</button>
-    </div>`;
-  progressBar.style.width="100%";
-  nextBtn.style.display="none";
-}
-
-function confetti(){
-  confetti({particleCount:150,spread:80,origin:{y:0.6}});
-}
-
-function toggleMusic(){
-  const m=document.getElementById("bgMusic");
-  m.paused?m.play():m.pause();
-}
-
-nextBtn.addEventListener("click",startCountdown);
-
-showQuestion();
-updateProgress();
-</script>
-
+    showQuestion();
+    updateProgress();
+  </script>
 </body>
 </html>
