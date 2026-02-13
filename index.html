@@ -293,6 +293,26 @@
       if (r >= rounds.length) return endGame();
       showQuestion();
     }
+    /* floating hearts generate */
+const hearts=document.getElementById("hearts");
+for(let i=0;i<20;i++){
+  const h=document.createElement("span");
+  h.innerHTML="💗";
+  h.style.left=Math.random()*100+"vw";
+  h.style.animationDuration=15+Math.random()*10+"s";
+  hearts.appendChild(h);
+}
+
+/* typewriter */
+function typeText(text){
+  questionText.textContent="";
+  let i=0;
+  const iv=setInterval(()=>{
+    questionText.textContent+=text[i];
+    i++;
+    if(i>=text.length)clearInterval(iv);
+  },20);
+}
 
     function endGame() {
       roundTitle.textContent = '💘 Final Screen';
